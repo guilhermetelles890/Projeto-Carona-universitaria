@@ -1,14 +1,25 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniDriver</title>
-</head>
-<body>
+{% extends "base.html" %}
+
+{% block title %}Início - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="hero">
 
     <h1>UniDriver</h1>
-    <p>Mobilidade compartilhada para a comunidade universitária.</p>
 
-</body>
-</html>
+    <h2>Mobilidade compartilhada para a comunidade universitária.</h2>
+
+    <p>
+        Encontre ou ofereça caronas de forma organizada,
+        prática e confiável.
+    </p>
+
+    <div class="hero-buttons">
+        <a href="#" class="btn">Buscar carona</a>
+        <a href="#" class="btn btn-secondary">Oferecer carona</a>
+    </div>
+
+</section>
+
+{% endblock %}

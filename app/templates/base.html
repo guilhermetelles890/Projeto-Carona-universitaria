@@ -3,14 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniDriver</title>
+
+    <title>{% block title %}UniDriver{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 
 <body>
 
-    <h1>UniDriver</h1>
+    <header>
+        <nav>
+            <a href="{{ url_for('inicio') }}">UniDriver</a>
 
-    <p>Mobilidade compartilhada para a comunidade universitária.</p>
+            <div>
+                <a href="#">Entrar</a>
+                <a href="#">Cadastrar</a>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2026 UniDriver</p>
+    </footer>
 
 </body>
 </html>
