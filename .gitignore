@@ -1,0 +1,19 @@
+# Arquivos temporários do Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Variáveis de ambiente e informações sensíveis
+.env
+
+# Banco de dados local
+*.db
+*.sqlite
+*.sqlite3
+
+# Configurações do VS Code
+.vscode/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
