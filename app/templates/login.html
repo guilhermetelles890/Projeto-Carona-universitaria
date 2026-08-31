@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Login - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <h1>Bem-vindo de volta!</h1>
+
+            <p>
+                Entre na sua conta para encontrar ou oferecer caronas.
+            </p>
+        </div>
+
+        <form>
+
+            <div class="form-group">
+                <label for="email">E-mail institucional</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="seuemail@universidade.edu.br"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="senha">Senha</label>
+
+                <input
+                    type="password"
+                    id="senha"
+                    name="senha"
+                    placeholder="Digite sua senha"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="form-button">
+                Entrar
+            </button>
+
+        </form>
+
+        <div class="form-footer">
+            <p>
+                Ainda não possui uma conta?
+                <a href="{{ url_for('cadastro') }}">Cadastre-se</a>
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
