@@ -1,8 +1,8 @@
 from flask import render_template, request, redirect, url_for
 
 from app import app
-from app.database import cadastrar_usuario
-from werkzeug.security import generate_password_hash
+from app.database import cadastrar_usuario, conectar_banco
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 @app.route("/")
@@ -38,6 +38,24 @@ def cadastro():
     return render_template("cadastro.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        senha = request.form["senha"]
+
+        conexao = conectar_banco()
+
+        usuario = conexao.execute(
+            "SELECT * FROM usuarios WHERE email = ?",
+            (email,)
+        ).fetchone()
+
+        conexao.close()
+
+        if usuario and check_password_hash(usuario["senha"], senha):
+            return "Login realizado com sucesso!"
+
+        return "E-mail ou senha incorretos."
+
     return render_template("login.html")
