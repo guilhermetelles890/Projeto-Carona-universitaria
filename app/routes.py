@@ -1,9 +1,18 @@
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, session
 
 from app import app
 from app.database import cadastrar_usuario, conectar_banco
 from werkzeug.security import generate_password_hash, check_password_hash
 
+from functools import wraps
+
+def login_obrigatorio(funcao):
+    @wraps(funcao)
+    def loginObrigtorio(*args, **kwargs):
+        if "usuario_id" not in session:
+            return redirect(url_for("login"))
+        return funcao(*args, **kwargs)
+    return loginObrigtorio
 
 @app.route("/")
 def inicio():
@@ -54,8 +63,18 @@ def login():
         conexao.close()
 
         if usuario and check_password_hash(usuario["senha"], senha):
-            return "Login realizado com sucesso!"
+            return redirect(url_for("inicio"))
 
-        return "E-mail ou senha incorretos."
+        return "E-mail ou senha incorretos. Volte e tente novamente ou se for sua primeira vez, cadastre-se."
 
     return render_template("login.html")
+
+@app.route("/buscar_caronas")
+@login_obrigatorio
+def buscar_caronas():
+    return render_template("buscar_caronas.html")
+
+@app.route("/oferecer_carona")
+@login_obrigatorio
+def oferecer_carona():
+    return render_template("publicar_carona.html")

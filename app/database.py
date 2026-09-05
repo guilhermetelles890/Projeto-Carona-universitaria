@@ -1,6 +1,9 @@
 import sqlite3
-
+import os
 CAMINHO_BANCO = "database/banco.db"
+
+# Criar o diretório se não existir
+os.makedirs(os.path.dirname(CAMINHO_BANCO), exist_ok=True)
 
 
 def conectar_banco():

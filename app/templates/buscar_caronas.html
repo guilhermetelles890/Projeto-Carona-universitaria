@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar Carona - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <h1>Buscar Carona</h1>
+            <p>Olá, {{ session['usuario_nome'] }}! Veja as caronas disponíveis abaixo.</p>
+        </div>
+
+        <div class="lista-caronas">
+
+            <div class="carona-card">
+                <h3>Centro de Cachoeiro de Itapemirim → Campus Multix</h3>
+                <p>Motorista: Matheus Foguete Six Seven</p>
+                <p>Data/Hora: 05/09 às 07:30</p>
+                <p>Vagas disponíveis: 3</p>
+                <a href="#" class="btn">Solicitar carona</a>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
