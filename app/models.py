@@ -12,8 +12,9 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS motoristas (
                     email TEXT NOT NULL,
                     senha TEXT NOT NULL,
                     cnh TEXT NOT NULL UNIQUE,
-                    data_cadastro TEXT NOT NULL
+                    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
                 )''')
+
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS passageiros (
                     id_passageiro INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +24,7 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS passageiros (
                     telefone TEXT NOT NULL UNIQUE,
                     curso TEXT NOT NULL,
                     campos TEXT NOT NULL,
-                    data_cadastro TEXT NOT NULL
+                    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP
                 )''')
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS veiculos (
@@ -37,13 +38,14 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS veiculos (
                     FOREIGN KEY (id_motorista) REFERENCES motoristas(id_motorista)
                 )''')
 
+
 cursor.execute('''CREATE TABLE IF NOT EXISTS trajetos (
                     id_trajeto INTEGER PRIMARY KEY AUTOINCREMENT,
                     id_motorista INTEGER NOT NULL,
                     id_veiculo INTEGER NOT NULL,
                     origem TEXT NOT NULL ,
                     destino TEXT NOT NULL,
-                    data_hora_saida TEXT NOT NULL,
+                    data_hora_saida DATETIME DEFAULT CURRENT_TIMESTAMP,
                     vagas_disponiveis INTEGER NOT NULL,
                     status TEXT NOT NULL,
 
@@ -51,12 +53,13 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS trajetos (
                     FOREIGN KEY (id_veiculo) REFERENCES veiculos(id_veiculo)
                 )''')
 
+
 cursor.execute('''CREATE TABLE IF NOT EXISTS solicitacoes (
                     id_solicitacao INTEGER PRIMARY KEY AUTOINCREMENT,
                     id_trajeto INTEGER NOT NULL,
                     id_passageiro INTEGER NOT NULL,
                     status TEXT NOT NULL,
-                    data_solicitacao INTEGER NOT NULL,
+                    data_solicitacao DATETIME DEFAULT CURRENT_TIMESTAMP,
 
                     FOREIGN KEY (id_trajeto) REFERENCES trajetos(id_trajeto),
                     FOREIGN KEY (id_passageiro) REFERENCES passageiros(id_passageiro)
