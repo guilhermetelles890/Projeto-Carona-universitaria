@@ -127,6 +127,10 @@ footer {
     margin-bottom: 20px;
 }
 
+#cnh-group {
+    transition: opacity 0.2s ease;
+}
+
 .form-group label {
     display: block;
     margin-bottom: 8px;

@@ -28,6 +28,7 @@ def cadastro():
         telefone = request.form["telefone"]
         curso = request.form["curso"]
         campus = request.form["campus"]
+        cnh = request.form["cnh"]
         tipo_usuario = request.form["tipo_usuario"]
 
         senha_hash = generate_password_hash(senha)
@@ -39,6 +40,7 @@ def cadastro():
             telefone,
             curso,
             campus,
+            cnh,
             tipo_usuario
         )
 

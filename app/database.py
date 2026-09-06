@@ -48,15 +48,13 @@ def criar_tabela_trajetos():
         CREATE TABLE IF NOT EXISTS trajetos (
             id_trajeto INTEGER PRIMARY KEY AUTOINCREMENT,
             id_usuario INTEGER NOT NULL,
-            id_veiculo INTEGER NOT NULL,
             origem TEXT NOT NULL,
             destino TEXT NOT NULL,
             data_hora_saida DATETIME DEFAULT CURRENT_TIMESTAMP,
             vagas_disponiveis INTEGER NOT NULL,
             status TEXT NOT NULL,
 
-            FOREIGN KEY (id_usuario) REFERENCES usuarios (id),
-            FOREIGN KEY (id_veiculo) REFERENCES veiculos (id_veiculo)
+            FOREIGN KEY (id_usuario) REFERENCES usuarios (id)
         )
     """)
 
