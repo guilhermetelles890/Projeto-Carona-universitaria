@@ -39,28 +39,6 @@ def criar_tabela_usuarios():
     conexao.close()
 
 
-def criar_tabela_veiculos():
-
-    conexao = conectar_banco()
-    cursor = conexao.cursor()
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS veiculos (
-            id_veiculo INTEGER PRIMARY KEY AUTOINCREMENT,
-            id_usuario INTEGER NOT NULL,
-            placa TEXT NOT NULL UNIQUE,
-            modelo TEXT NOT NULL,
-            cor TEXT NOT NULL,
-            capacidade INTEGER NOT NULL,
-
-            FOREIGN KEY (id_usuario) REFERENCES usuarios (id)
-        )
-    """)
-
-    conexao.commit()
-    conexao.close()
-
-
 def criar_tabela_trajetos():
 
     conexao = conectar_banco()
@@ -124,7 +102,6 @@ def cadastrar_usuario(nome, email, senha, telefone, curso, campus, cnh, tipo_usu
 
 def inicializar_banco():
     criar_tabela_usuarios()
-    criar_tabela_veiculos()
     criar_tabela_trajetos()
     criar_tabela_solicitacoes()
 
