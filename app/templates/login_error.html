@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Erro no login - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container error-container">
+
+        <div class="error-icon">
+            !
+        </div>
+
+        <div class="form-header">
+            <h1>Não foi possível entrar</h1>
+
+            <p>
+                E-mail ou senha incorretos. Volte e tente novamente
+                ou, se for sua primeira vez, cadastre-se.
+            </p>
+        </div>
+
+        <div class="hero-buttons">
+            <a href="{{ url_for('login') }}" class="btn">
+                Tentar novamente
+            </a>
+
+            <a href="{{ url_for('cadastro') }}" class="btn btn-secondary">
+                Cadastre-se
+            </a>
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

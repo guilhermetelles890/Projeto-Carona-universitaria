@@ -187,3 +187,32 @@ footer {
 .form-footer a:hover {
     text-decoration: underline;
 }
+
+/* Tela bonitinha de erro de login */
+
+.error-container {
+    text-align: center;
+}
+ 
+.error-icon {
+    width: 60px;
+    height: 60px;
+    margin: 0 auto 20px;
+    border-radius: 50%;
+    background-color: #f5c2c2;
+    color: #a11;
+    font-size: 28px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+ 
+.error-container .form-header p {
+    max-width: 420px;
+    margin: 0 auto;
+}
+ 
+.error-container .hero-buttons {
+    margin-top: 30px;
+}

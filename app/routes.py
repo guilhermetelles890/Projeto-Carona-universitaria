@@ -69,8 +69,8 @@ def login():
             session["usuario_nome"] = usuario["nome"]
             return redirect(url_for("inicio"))
 
-        return "E-mail ou senha incorretos. Volte e tente novamente ou se for sua primeira vez, cadastre-se."
-
+        return render_template("login_error.html")
+    
     return render_template("login.html")
 
 @app.route("/buscar_caronas")
