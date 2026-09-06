@@ -1,2 +1,80 @@
-<h1>Publicar Carona</h1>
-<p>Publica sua carona ae meu nobre!</p>
+{% extends "base.html" %}
+
+{% block title %}Publicar Carona - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <h1>Publicar Carona</h1>
+            <p>Preencha os dados da carona que você vai publicar.</p>
+        </div>
+
+        <form method="POST" action="{{ url_for('publicar_carona') }}">
+
+            <div class="form-group">
+                <label for="origem">Origem</label>
+                <input
+                    type="text"
+                    id="origem"
+                    name="origem"
+                    placeholder="De onde a carona vai sair"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="destino">Destino</label>
+                <input
+                    type="text"
+                    id="destino"
+                    name="destino"
+                    placeholder="Para onde a carona vai"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="data">Data</label>
+                <input
+                    type="date"
+                    id="data"
+                    name="data"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="hora">Hora</label>
+                <input
+                    type="time"
+                    id="hora"
+                    name="hora"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="vagas_disponiveis">Vagas disponíveis</label>
+                <input
+                    type="number"
+                    id="vagas_disponiveis"
+                    name="vagas_disponiveis"
+                    min="1"
+                    placeholder="Quantas pessoas cabem"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn">Publicar carona</button>
+
+        </form>
+
+    </div>
+
+</section>
+
+{% endblock %}

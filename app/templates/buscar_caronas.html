@@ -1,32 +1,17 @@
-{% extends "base.html" %}
+<div class="lista-caronas">
 
-{% block title %}Buscar Carona - UniDriver{% endblock %}
-
-{% block content %}
-
-<section class="form-section">
-
-    <div class="form-container">
-
-        <div class="form-header">
-            <h1>Buscar Carona</h1>
-            <p>Olá, {{ session['usuario_nome'] }}! Veja as caronas disponíveis abaixo.</p>
+    {% for carona in caronas %}
+        <div class="carona-card">
+            <h3>{{ carona['origem'] }} → {{ carona['destino'] }}</h3>
+            <p>Motorista: {{ carona['motorista_nome'] }}</p>
+            <p>Data/Hora: {{ carona['data'] }} às {{ carona['hora'] }}</p>
+            <p>Vagas disponíveis: {{ carona['vagas_disponiveis'] }}</p>
+            <a href="#" class="btn">Solicitar carona</a>
         </div>
+    {% else %}
+        <p>Nenhuma carona disponível no momento.</p>
+    {% endfor %}
 
-        <div class="lista-caronas">
+    <a href="{{ url_for('inicio') }}" class="btn" style="margin-top: 20px; display: inline-block;">Voltar ao início</a>
 
-            <div class="carona-card">
-                <h3>Centro de Cachoeiro de Itapemirim → Campus Multix</h3>
-                <p>Motorista: Matheus Foguete Six Seven</p>
-                <p>Data/Hora: 05/09 às 07:30</p>
-                <p>Vagas disponíveis: 3</p>
-                <a href="#" class="btn">Solicitar carona</a>
-            </div>
-
-        </div>
-
-    </div>
-
-</section>
-
-{% endblock %}
+</div>

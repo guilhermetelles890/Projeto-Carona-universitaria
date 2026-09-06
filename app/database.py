@@ -48,5 +48,23 @@ def cadastrar_usuario(nome, email, senha, telefone, curso, campus, tipo_usuario)
     conexao.commit()
     conexao.close()
 
+    def criar_tabela_caronas():
+        conexao = conectar_banco()
+        cursor = conexao.cursor()
 
+        cursor.execute("""
+            CREATE TABLE IF NOT EXISTS caronas (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                origem TEXT NOT NULL,
+                destino TEXT NOT NULL,
+                data_hora DATETIME NOT NULL,
+                vagas_disponiveis INTEGER NOT NULL,
+                id_usuario INTEGER NOT NULL,
+                FOREIGN KEY (id_usuario) REFERENCES usuarios (id)
+            )
+        """)
+
+        conexao.commit()
+        conexao.close()
+    criar_tabela_caronas()
 criar_tabela_usuarios()

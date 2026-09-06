@@ -63,6 +63,8 @@ def login():
         conexao.close()
 
         if usuario and check_password_hash(usuario["senha"], senha):
+            session["usuario_id"] = usuario["id"]
+            session["usuario_nome"] = usuario["nome"]
             return redirect(url_for("inicio"))
 
         return "E-mail ou senha incorretos. Volte e tente novamente ou se for sua primeira vez, cadastre-se."
@@ -74,7 +76,7 @@ def login():
 def buscar_caronas():
     return render_template("buscar_caronas.html")
 
-@app.route("/oferecer_carona")
+@app.route("/publicar_carona", methods=["GET", "POST"])
 @login_obrigatorio
-def oferecer_carona():
+def publicar_carona():
     return render_template("publicar_carona.html")
