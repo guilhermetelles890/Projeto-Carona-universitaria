@@ -84,6 +84,14 @@ def criar_tabela_solicitacoes():
     conexao.close()
 
 
+
+def inicializar_banco():
+    criar_tabela_usuarios()
+    criar_tabela_trajetos()
+    criar_tabela_solicitacoes()
+
+
+
 def cadastrar_usuario(nome, email, senha, telefone, curso, campus, cnh, tipo_usuario):
     conexao = conectar_banco()
     cursor = conexao.cursor()
@@ -96,13 +104,4 @@ def cadastrar_usuario(nome, email, senha, telefone, curso, campus, cnh, tipo_usu
 
     conexao.commit()
     conexao.close()
-
-
-def inicializar_banco():
-    criar_tabela_usuarios()
-    criar_tabela_trajetos()
-    criar_tabela_solicitacoes()
-
-
-if __name__ == "__main__":
     inicializar_banco()
