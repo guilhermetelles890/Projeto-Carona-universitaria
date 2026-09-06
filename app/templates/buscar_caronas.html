@@ -1,17 +1,37 @@
-<div class="lista-caronas">
+{% extends "base.html" %}
 
-    {% for carona in caronas %}
-        <div class="carona-card">
-            <h3>{{ carona['origem'] }} → {{ carona['destino'] }}</h3>
-            <p>Motorista: {{ carona['motorista_nome'] }}</p>
-            <p>Data/Hora: {{ carona['data'] }} às {{ carona['hora'] }}</p>
-            <p>Vagas disponíveis: {{ carona['vagas_disponiveis'] }}</p>
-            <a href="#" class="btn">Solicitar carona</a>
+{% block title %}Buscar Carona - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <h1>Buscar Carona</h1>
+            <p>Olá, {{ session['usuario_nome'] }}! Veja as caronas disponíveis abaixo.</p>
         </div>
-    {% else %}
-        <p>Nenhuma carona disponível no momento.</p>
-    {% endfor %}
 
-    <a href="{{ url_for('inicio') }}" class="btn" style="margin-top: 20px; display: inline-block;">Voltar ao início</a>
+        <div class="lista-caronas">
 
-</div>
+            {% for t in trajetos %}
+                <div class="carona-card">
+                    <h3>{{ t['origem'] }} → {{ t['destino'] }}</h3>
+                    <p>Motorista: {{ t['motorista_nome'] }}</p>
+                    <p>Data/Hora: {{ t['data_hora_saida'] }}</p>
+                    <p>Vagas disponíveis: {{ t['vagas_disponiveis'] }}</p>
+                </div>
+            {% else %}
+                <p>Nenhuma carona disponível no momento.</p>
+            {% endfor %}
+
+            <a href="{{ url_for('inicio') }}" class="btn" style="margin-top: 20px; display: inline-block;">Voltar ao início</a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

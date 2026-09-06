@@ -104,4 +104,33 @@ def cadastrar_usuario(nome, email, senha, telefone, curso, campus, cnh, tipo_usu
 
     conexao.commit()
     conexao.close()
-    inicializar_banco()
+def cadastrar_trajeto(id_usuario, origem, destino, data, hora, vagas_disponiveis):
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    data_hora_saida = data + " " + hora
+
+    cursor.execute("""
+        INSERT INTO trajetos
+        (id_usuario, origem, destino, data_hora_saida, vagas_disponiveis, status)
+        VALUES (?, ?, ?, ?, ?, 'ativo')
+    """, (id_usuario, origem, destino, data_hora_saida, vagas_disponiveis))
+
+    conexao.commit()
+    conexao.close()
+
+def listar_trajetos():
+    conexao = conectar_banco()
+
+    trajetos = conexao.execute("""
+        SELECT trajetos.*, usuarios.nome AS motorista_nome
+        FROM trajetos
+        JOIN usuarios ON trajetos.id_usuario = usuarios.id
+        WHERE trajetos.vagas_disponiveis > 0
+        ORDER BY trajetos.data_hora_saida
+    """).fetchall()
+
+    conexao.close()
+    return trajetos
+
+inicializar_banco()

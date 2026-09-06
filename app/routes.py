@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, session
 
 from app import app
-from app.database import cadastrar_usuario, conectar_banco
+from app.database import cadastrar_usuario, conectar_banco, cadastrar_trajeto, listar_trajetos
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from functools import wraps
@@ -76,9 +76,28 @@ def login():
 @app.route("/buscar_caronas")
 @login_obrigatorio
 def buscar_caronas():
-    return render_template("buscar_caronas.html")
+    trajetos = listar_trajetos()
+    return render_template("buscar_caronas.html", trajetos=trajetos)
 
 @app.route("/publicar_carona", methods=["GET", "POST"])
 @login_obrigatorio
 def publicar_carona():
+    if request.method == "POST":
+        origem = request.form["origem"]
+        destino = request.form["destino"]
+        data = request.form["data"]
+        hora = request.form["hora"]
+        vagas_disponiveis = request.form["vagas_disponiveis"]
+
+        cadastrar_trajeto(
+            session["usuario_id"],
+            origem,
+            destino,
+            data,
+            hora,
+            vagas_disponiveis
+        )
+
+        return redirect(url_for("buscar_caronas"))
+
     return render_template("publicar_carona.html")
