@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Minhas Solicitações - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <h1>Minhas Solicitações</h1>
+            <p>Acompanhe o status das caronas que você solicitou.</p>
+        </div>
+
+        <div class="lista-caronas">
+
+            {% for s in solicitacoes %}
+                <div class="carona-card">
+                    <h3>{{ s['origem'] }} → {{ s['destino'] }}</h3>
+                    <p>Motorista: {{ s['motorista_nome'] }}</p>
+                    <p>Data/Hora da carona: {{ s['data_hora_saida'] }}</p>
+                    <p>Solicitado em: {{ s['data_solicitacao'] }}</p>
+
+                    {% if s['status'] == 'pendente' %}
+                        <span class="badge badge-pendente">Aguardando resposta do motorista</span>
+                    {% elif s['status'] == 'aceita' %}
+                        <span class="badge badge-aceita">Aceita ✅</span>
+                        <p>Telefone do motorista: {{ s['motorista_telefone'] }}</p>
+                    {% else %}
+                        <span class="badge badge-recusada">Recusada ❌</span>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>Você ainda não solicitou nenhuma carona.</p>
+            {% endfor %}
+
+            <a href="{{ url_for('buscar_caronas') }}" class="btn" style="margin-top: 20px; display: inline-block;">Buscar caronas</a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

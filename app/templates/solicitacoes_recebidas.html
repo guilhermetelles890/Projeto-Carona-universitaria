@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Solicitações Recebidas - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <h1>Solicitações Recebidas</h1>
+            <p>Aceite ou recuse os pedidos de carona para os seus trajetos.</p>
+        </div>
+
+        <div class="lista-caronas">
+
+            {% for s in solicitacoes %}
+                <div class="carona-card">
+                    <h3>{{ s['origem'] }} → {{ s['destino'] }}</h3>
+                    <p>Passageiro: {{ s['passageiro_nome'] }}</p>
+                    <p>Telefone: {{ s['passageiro_telefone'] }}</p>
+                    <p>Data/Hora da carona: {{ s['data_hora_saida'] }}</p>
+                    <p>Solicitado em: {{ s['data_solicitacao'] }}</p>
+
+                    {% if s['status'] == 'pendente' %}
+                        <span class="badge badge-pendente">Pendente</span>
+
+                        <div style="display: flex; gap: 10px; margin-top: 10px;">
+                            <form action="{{ url_for('aceitar_solicitacao_route', id_solicitacao=s['id_solicitacao']) }}" method="POST">
+                                <button type="submit" class="btn">Aceitar</button>
+                            </form>
+                            <form action="{{ url_for('recusar_solicitacao_route', id_solicitacao=s['id_solicitacao']) }}" method="POST">
+                                <button type="submit" class="btn btn-secondary">Recusar</button>
+                            </form>
+                        </div>
+                    {% elif s['status'] == 'aceita' %}
+                        <span class="badge badge-aceita">Aceita ✅</span>
+                    {% else %}
+                        <span class="badge badge-recusada">Recusada ❌</span>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>Nenhuma solicitação recebida até o momento.</p>
+            {% endfor %}
+
+            <a href="{{ url_for('inicio') }}" class="btn" style="margin-top: 20px; display: inline-block;">Voltar ao início</a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

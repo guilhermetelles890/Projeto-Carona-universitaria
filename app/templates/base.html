@@ -16,13 +16,30 @@
             <a href="{{ url_for('inicio') }}">UniDriver</a>
 
             <div>
-                <a href="{{ url_for('login') }}">Entrar</a>
-                <a href="{{ url_for('cadastro') }}">Cadastrar</a>
+                {% if session.get('usuario_id') %}
+                    <a href="{{ url_for('buscar_caronas') }}">Buscar carona</a>
+                    <a href="{{ url_for('publicar_carona') }}">Publicar carona</a>
+                    <a href="{{ url_for('minhas_solicitacoes') }}">Minhas solicitações</a>
+                    <a href="{{ url_for('solicitacoes_recebidas') }}">Solicitações recebidas</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Entrar</a>
+                    <a href="{{ url_for('cadastro') }}">Cadastrar</a>
+                {% endif %}
             </div>
         </nav>
     </header>
 
     <main>
+        {% with mensagens = get_flashed_messages() %}
+            {% if mensagens %}
+                <div class="flash-container">
+                    {% for mensagem in mensagens %}
+                        <div class="flash-message">{{ mensagem }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
         {% block content %}
         {% endblock %}
     </main>

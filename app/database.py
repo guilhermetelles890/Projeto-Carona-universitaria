@@ -133,4 +133,142 @@ def listar_trajetos():
     conexao.close()
     return trajetos
 
+
+def buscar_trajeto_por_id(id_trajeto):
+    conexao = conectar_banco()
+
+    trajeto = conexao.execute("""
+        SELECT * FROM trajetos WHERE id_trajeto = ?
+    """, (id_trajeto,)).fetchone()
+
+    conexao.close()
+    return trajeto
+
+
+def buscar_solicitacao_existente(id_trajeto, id_usuario):
+    conexao = conectar_banco()
+
+    solicitacao = conexao.execute("""
+        SELECT * FROM solicitacoes
+        WHERE id_trajeto = ? AND id_usuario = ? AND status IN ('pendente', 'aceita')
+    """, (id_trajeto, id_usuario)).fetchone()
+
+    conexao.close()
+    return solicitacao
+
+
+def criar_solicitacao(id_trajeto, id_usuario):
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        INSERT INTO solicitacoes (id_trajeto, id_usuario, status)
+        VALUES (?, ?, 'pendente')
+    """, (id_trajeto, id_usuario))
+
+    conexao.commit()
+    conexao.close()
+
+
+def buscar_solicitacao_por_id(id_solicitacao):
+    conexao = conectar_banco()
+
+    solicitacao = conexao.execute("""
+        SELECT solicitacoes.*, trajetos.id_usuario AS id_motorista,
+               trajetos.vagas_disponiveis, trajetos.origem, trajetos.destino
+        FROM solicitacoes
+        JOIN trajetos ON solicitacoes.id_trajeto = trajetos.id_trajeto
+        WHERE solicitacoes.id_solicitacao = ?
+    """, (id_solicitacao,)).fetchone()
+
+    conexao.close()
+    return solicitacao
+
+
+def listar_solicitacoes_recebidas(id_usuario_motorista):
+    conexao = conectar_banco()
+
+    solicitacoes = conexao.execute("""
+        SELECT solicitacoes.*, trajetos.origem, trajetos.destino,
+               trajetos.data_hora_saida, trajetos.vagas_disponiveis,
+               usuarios.nome AS passageiro_nome, usuarios.telefone AS passageiro_telefone
+        FROM solicitacoes
+        JOIN trajetos ON solicitacoes.id_trajeto = trajetos.id_trajeto
+        JOIN usuarios ON solicitacoes.id_usuario = usuarios.id
+        WHERE trajetos.id_usuario = ?
+        ORDER BY (solicitacoes.status = 'pendente') DESC, solicitacoes.data_solicitacao DESC
+    """, (id_usuario_motorista,)).fetchall()
+
+    conexao.close()
+    return solicitacoes
+
+
+def listar_minhas_solicitacoes(id_usuario):
+    conexao = conectar_banco()
+
+    solicitacoes = conexao.execute("""
+        SELECT solicitacoes.*, trajetos.origem, trajetos.destino,
+               trajetos.data_hora_saida, usuarios.nome AS motorista_nome,
+               usuarios.telefone AS motorista_telefone
+        FROM solicitacoes
+        JOIN trajetos ON solicitacoes.id_trajeto = trajetos.id_trajeto
+        JOIN usuarios ON trajetos.id_usuario = usuarios.id
+        WHERE solicitacoes.id_usuario = ?
+        ORDER BY solicitacoes.data_solicitacao DESC
+    """, (id_usuario,)).fetchall()
+
+    conexao.close()
+    return solicitacoes
+
+
+def aceitar_solicitacao(id_solicitacao):
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        UPDATE solicitacoes SET status = 'aceita' WHERE id_solicitacao = ?
+    """, (id_solicitacao,))
+
+    cursor.execute("""
+        SELECT id_trajeto FROM solicitacoes WHERE id_solicitacao = ?
+    """, (id_solicitacao,))
+    id_trajeto = cursor.fetchone()["id_trajeto"]
+
+    cursor.execute("""
+        UPDATE trajetos
+        SET vagas_disponiveis = vagas_disponiveis - 1
+        WHERE id_trajeto = ? AND vagas_disponiveis > 0
+    """, (id_trajeto,))
+
+    cursor.execute("""
+        SELECT vagas_disponiveis FROM trajetos WHERE id_trajeto = ?
+    """, (id_trajeto,))
+    vagas_restantes = cursor.fetchone()["vagas_disponiveis"]
+
+    if vagas_restantes <= 0:
+        cursor.execute("""
+            UPDATE trajetos SET status = 'lotado' WHERE id_trajeto = ?
+        """, (id_trajeto,))
+
+        cursor.execute("""
+            UPDATE solicitacoes SET status = 'recusada'
+            WHERE id_trajeto = ? AND status = 'pendente'
+        """, (id_trajeto,))
+
+    conexao.commit()
+    conexao.close()
+
+
+def recusar_solicitacao(id_solicitacao):
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        UPDATE solicitacoes SET status = 'recusada' WHERE id_solicitacao = ?
+    """, (id_solicitacao,))
+
+    conexao.commit()
+    conexao.close()
+
+
 inicializar_banco()
