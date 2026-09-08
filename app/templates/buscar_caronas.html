@@ -6,43 +6,55 @@
 
 <section class="form-section">
 
-    <div class="form-container">
+```
+<div class="form-container">
 
-        <div class="form-header">
-            <h1>Buscar Carona</h1>
-            <p>Olá, {{ session['usuario_nome'] }}! Veja as caronas disponíveis abaixo.</p>
-        </div>
+    <div class="form-header">
+        <h1>Buscar Carona</h1>
+        <p>Olá, {{ session['usuario_nome'] }}! Veja as caronas disponíveis abaixo.</p>
+    </div>
 
-        <div class="lista-caronas">
+    <div class="lista-caronas">
 
-            {% for t in trajetos %}
-                <div class="carona-card">
-                    <h3>{{ t['origem'] }} → {{ t['destino'] }}</h3>
-                    <p>Motorista: {{ t['motorista_nome'] }}</p>
-                    <p>Data/Hora: {{ t['data_hora_saida'] }}</p>
-                    <p>Vagas disponíveis: {{ t['vagas_disponiveis'] }}</p>
+        {% for t in trajetos %}
+            <div class="carona-card">
+                
+                <h3>{{ t['origem'] }} → {{ t['destino'] }}</h3>
 
-                    {% if t['id_usuario'] == session['usuario_id'] %}
-                        <span class="badge badge-neutro">Sua carona</span>
-                    {% elif status_por_trajeto.get(t['id_trajeto']) == 'aceita' %}
-                        <span class="badge badge-aceita">Solicitação aceita ✅</span>
-                    {% elif status_por_trajeto.get(t['id_trajeto']) == 'pendente' %}
-                        <span class="badge badge-pendente">Solicitação pendente</span>
-                    {% else %}
-                        <form action="{{ url_for('solicitar_carona', id_trajeto=t['id_trajeto']) }}" method="POST">
-                            <button type="submit" class="btn" style="margin-top: 10px;">Solicitar carona</button>
-                        </form>
-                    {% endif %}
-                </div>
-            {% else %}
-                <p>Nenhuma carona disponível no momento.</p>
-            {% endfor %}
+                <p>Motorista: {{ t['motorista_nome'] }}</p>
 
-            <a href="{{ url_for('inicio') }}" class="btn" style="margin-top: 20px; display: inline-block;">Voltar ao início</a>
+                <p>Data/Hora: {{ t['data_hora_saida'] }}</p>
 
-        </div>
+                <p>Vagas disponíveis: {{ t['vagas_disponiveis'] }}</p>
+
+                <!-- Link para visualizar a rota no Google Maps -->
+                <a
+                    href="https://www.google.com/maps/dir/?api=1&origin={{ t['origem']|urlencode }}&destination={{ t['destino']|urlencode }}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="btn"
+                    style="margin-top: 10px; display: inline-block;"
+                >
+                    🗺️ Ver rota no Google Maps
+                </a>
+
+            </div>
+        {% else %}
+            <p>Nenhuma carona disponível no momento.</p>
+        {% endfor %}
+
+        <a
+            href="{{ url_for('inicio') }}"
+            class="btn"
+            style="margin-top: 20px; display: inline-block;"
+        >
+            Voltar ao início
+        </a>
 
     </div>
+
+</div>
+```
 
 </section>
 
