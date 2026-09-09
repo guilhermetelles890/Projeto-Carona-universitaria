@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Avaliações Pendentes - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <h1>Avaliações Pendentes</h1>
+            <p>Dê uma nota para quem viajou com você.</p>
+        </div>
+
+        <div class="lista-caronas">
+
+            {% for p in pendentes %}
+                <div class="avaliacao-card">
+                    <h3>{{ p['origem'] }} → {{ p['destino'] }}</h3>
+                    <p>
+                        {% if p['papel_avaliado'] == 'motorista' %}
+                            Avaliar motorista: {{ p['nome_avaliado'] }}
+                        {% else %}
+                            Avaliar passageiro: {{ p['nome_avaliado'] }}
+                        {% endif %}
+                    </p>
+                    <p>Data/Hora: {{ p['data_hora_saida'] }}</p>
+
+                    <form action="{{ url_for('avaliar_route', id_trajeto=p['id_trajeto'], id_avaliado=p['id_avaliado']) }}" method="POST" style="margin-top: 15px;">
+
+                        <div class="star-rating">
+                            <input type="radio" id="nota5-{{ loop.index }}" name="nota" value="5">
+                            <label for="nota5-{{ loop.index }}">★</label>
+
+                            <input type="radio" id="nota4-{{ loop.index }}" name="nota" value="4">
+                            <label for="nota4-{{ loop.index }}">★</label>
+
+                            <input type="radio" id="nota3-{{ loop.index }}" name="nota" value="3">
+                            <label for="nota3-{{ loop.index }}">★</label>
+
+                            <input type="radio" id="nota2-{{ loop.index }}" name="nota" value="2">
+                            <label for="nota2-{{ loop.index }}">★</label>
+
+                            <input type="radio" id="nota1-{{ loop.index }}" name="nota" value="1">
+                            <label for="nota1-{{ loop.index }}">★</label>
+                        </div>
+
+                        <textarea name="comentario" placeholder="Comentário (opcional)"></textarea>
+
+                        <button type="submit" class="btn">Enviar avaliação</button>
+                    </form>
+                </div>
+            {% else %}
+                <p>Nenhuma avaliação pendente no momento.</p>
+            {% endfor %}
+
+            <a href="{{ url_for('inicio') }}" class="btn" style="margin-top: 20px; display: inline-block;">Voltar ao início</a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

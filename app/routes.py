@@ -1,4 +1,5 @@
 from flask import render_template, request, redirect, url_for, session, flash
+import sqlite3
 
 from app import app
 from app.database import (
@@ -14,6 +15,13 @@ from app.database import (
     listar_minhas_solicitacoes,
     aceitar_solicitacao,
     recusar_solicitacao,
+    listar_meus_trajetos,
+    finalizar_trajeto,
+    verificar_participacao_concluida,
+    verificar_avaliacao_existente,
+    criar_avaliacao,
+    listar_avaliacoes_pendentes_como_passageiro,
+    listar_avaliacoes_pendentes_como_motorista,
 )
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -46,16 +54,25 @@ def cadastro():
 
         senha_hash = generate_password_hash(senha)
 
-        cadastrar_usuario(
-            nome,
-            email,
-            senha_hash,
-            telefone,
-            curso,
-            campus,
-            cnh,
-            tipo_usuario
-        )
+        try:
+            cadastrar_usuario(
+                nome,
+                email,
+                senha_hash,
+                telefone,
+                curso,
+                campus,
+                cnh,
+                tipo_usuario
+            )
+        except sqlite3.IntegrityError as erro:
+            if "usuarios.email" in str(erro):
+                flash("Já existe uma conta com esse e-mail.")
+            elif "usuarios.cnh" in str(erro):
+                flash("Essa CNH já está cadastrada em outra conta.")
+            else:
+                flash("Não foi possível concluir o cadastro. Verifique os dados.")
+            return render_template("cadastro.html")
 
         return redirect(url_for("login"))
 
@@ -85,6 +102,90 @@ def login():
         return render_template("login_error.html")
     
     return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
+@app.route("/meus_trajetos")
+@login_obrigatorio
+def meus_trajetos():
+    trajetos = listar_meus_trajetos(session["usuario_id"])
+    return render_template("meus_trajetos.html", trajetos=trajetos)
+
+
+@app.route("/trajeto/<int:id_trajeto>/encerrar", methods=["POST"])
+@login_obrigatorio
+def encerrar_trajeto_route(id_trajeto):
+    trajeto = buscar_trajeto_por_id(id_trajeto)
+
+    if trajeto is None or trajeto["id_usuario"] != session["usuario_id"]:
+        flash("Trajeto não encontrado.")
+        return redirect(url_for("meus_trajetos"))
+
+    if trajeto["status"] == "finalizado":
+        flash("Essa viagem já foi encerrada.")
+        return redirect(url_for("meus_trajetos"))
+
+    finalizar_trajeto(id_trajeto)
+    flash("Viagem encerrada! Agora você já pode avaliar os passageiros.")
+
+    return redirect(url_for("meus_trajetos"))
+
+
+@app.route("/avaliacoes_pendentes")
+@login_obrigatorio
+def avaliacoes_pendentes():
+    pendentes = list(listar_avaliacoes_pendentes_como_passageiro(session["usuario_id"]))
+    pendentes += list(listar_avaliacoes_pendentes_como_motorista(session["usuario_id"]))
+
+    return render_template("avaliacoes_pendentes.html", pendentes=pendentes)
+
+
+@app.route("/avaliar/<int:id_trajeto>/<int:id_avaliado>", methods=["POST"])
+@login_obrigatorio
+def avaliar_route(id_trajeto, id_avaliado):
+    nota = request.form.get("nota")
+    comentario = request.form.get("comentario", "").strip()
+
+    if not nota or not nota.isdigit() or not (1 <= int(nota) <= 5):
+        flash("Escolha uma nota de 1 a 5 estrelas.")
+        return redirect(url_for("avaliacoes_pendentes"))
+
+    nota = int(nota)
+
+    if session["usuario_id"] == id_avaliado:
+        flash("Você não pode avaliar a si mesmo.")
+        return redirect(url_for("avaliacoes_pendentes"))
+
+    trajeto = buscar_trajeto_por_id(id_trajeto)
+    if trajeto is None:
+        flash("Trajeto não encontrado.")
+        return redirect(url_for("avaliacoes_pendentes"))
+
+    sou_motorista = trajeto["id_usuario"] == session["usuario_id"]
+
+    if sou_motorista:
+        if trajeto["status"] != "finalizado":
+            flash("Encerre a viagem antes de avaliar os passageiros.")
+            return redirect(url_for("meus_trajetos"))
+    else:
+        participei = verificar_participacao_concluida(id_trajeto, session["usuario_id"])
+        if not participei:
+            flash("Você não participou dessa viagem.")
+            return redirect(url_for("avaliacoes_pendentes"))
+
+    if verificar_avaliacao_existente(id_trajeto, session["usuario_id"], id_avaliado):
+        flash("Você já avaliou essa pessoa nessa viagem.")
+        return redirect(url_for("avaliacoes_pendentes"))
+
+    criar_avaliacao(id_trajeto, session["usuario_id"], id_avaliado, nota, comentario)
+    flash("Avaliação enviada. Obrigado!")
+
+    return redirect(url_for("avaliacoes_pendentes"))
+
 
 @app.route("/buscar_caronas")
 @login_obrigatorio

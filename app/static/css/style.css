@@ -22,17 +22,39 @@ nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    row-gap: 10px;
+}
+
+nav > div {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 10px;
 }
 
 nav a {
     text-decoration: none;
     color: #222;
     margin-left: 20px;
+    white-space: nowrap;
 }
 
 nav > a {
     font-size: 24px;
     font-weight: bold;
+}
+
+.nav-user {
+    margin-left: 20px;
+    color: #666;
+    font-size: 14px;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 main {

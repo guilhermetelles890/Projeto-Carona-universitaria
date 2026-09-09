@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Meus Trajetos - UniDriver{% endblock %}
+
+{% block content %}
+
+<section class="form-section">
+
+    <div class="form-container">
+
+        <div class="form-header">
+            <h1>Meus Trajetos</h1>
+            <p>Encerre a viagem quando ela terminar para poder avaliar os passageiros.</p>
+        </div>
+
+        <div class="lista-caronas">
+
+            {% for t in trajetos %}
+                <div class="carona-card">
+                    <h3>{{ t['origem'] }} → {{ t['destino'] }}</h3>
+                    <p>Data/Hora: {{ t['data_hora_saida'] }}</p>
+                    <p>Vagas disponíveis: {{ t['vagas_disponiveis'] }}</p>
+
+                    {% if t['status'] == 'finalizado' %}
+                        <span class="badge badge-finalizado">Viagem encerrada</span>
+                    {% elif t['status'] == 'lotado' %}
+                        <span class="badge badge-neutro">Lotado</span>
+                        <form action="{{ url_for('encerrar_trajeto_route', id_trajeto=t['id_trajeto']) }}" method="POST">
+                            <button type="submit" class="btn" style="margin-top: 10px;">Encerrar viagem</button>
+                        </form>
+                    {% else %}
+                        <span class="badge badge-pendente">Ativo</span>
+                        <form action="{{ url_for('encerrar_trajeto_route', id_trajeto=t['id_trajeto']) }}" method="POST">
+                            <button type="submit" class="btn" style="margin-top: 10px;">Encerrar viagem</button>
+                        </form>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>Você ainda não publicou nenhum trajeto.</p>
+            {% endfor %}
+
+            <a href="{{ url_for('publicar_carona') }}" class="btn" style="margin-top: 20px; display: inline-block;">Publicar nova carona</a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}

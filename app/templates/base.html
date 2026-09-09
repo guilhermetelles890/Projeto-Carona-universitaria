@@ -21,6 +21,10 @@
                     <a href="{{ url_for('publicar_carona') }}">Publicar carona</a>
                     <a href="{{ url_for('minhas_solicitacoes') }}">Minhas solicitações</a>
                     <a href="{{ url_for('solicitacoes_recebidas') }}">Solicitações recebidas</a>
+                    <a href="{{ url_for('meus_trajetos') }}">Meus trajetos</a>
+                    <a href="{{ url_for('avaliacoes_pendentes') }}">Avaliar</a>
+                    <span class="nav-user" title="{{ session['usuario_nome'] }}">{{ session['usuario_nome'] }}</span>
+                    <a href="{{ url_for('logout') }}">Sair</a>
                 {% else %}
                     <a href="{{ url_for('login') }}">Entrar</a>
                     <a href="{{ url_for('cadastro') }}">Cadastrar</a>
