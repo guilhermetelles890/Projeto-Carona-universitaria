@@ -2,6 +2,11 @@
 
 O UniDriver é um sistema de caronas universitárias desenvolvido para facilitar a oferta e a solicitação de caronas entre membros da comunidade acadêmica. O sistema busca oferecer uma alternativa mais organizada, prática e confiável aos métodos informais utilizados para combinar caronas.
 
+## Integrantes
+- Guilherme Telles dos Santos 
+- Mikael Brandão 
+- Matheus Fernandes
+
 ## Funcionalidades
 
 - Cadastro de usuários;
