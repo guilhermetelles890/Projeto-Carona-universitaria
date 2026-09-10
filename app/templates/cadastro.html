@@ -70,7 +70,6 @@
                     id="curso"
                     name="curso"
                     placeholder="Digite seu curso"
-                    required
                 >
             </div>
 
@@ -81,7 +80,6 @@
                     id="campus"
                     name="campus"
                     placeholder="Digite seu campus"
-                    required
                 >
             </div>
 
@@ -138,6 +136,8 @@
     const tipoUsuarioSelect = document.getElementById('tipo_usuario');
     const cnhGroup = document.getElementById('cnh-group');
     const cnhInput = document.getElementById('cnh');
+    const cursoInput = document.getElementById('curso');
+    const campusInput = document.getElementById('campus');
 
     function atualizarCampoCnh() {
         const precisaDeCnh = tipoUsuarioSelect.value === 'motorista' || tipoUsuarioSelect.value === 'ambos';
@@ -150,8 +150,18 @@
         }
     }
 
+    function atualizarCursoECampus() {
+        const ehSomenteMotorista = tipoUsuarioSelect.value === 'motorista';
+
+        cursoInput.required = !ehSomenteMotorista;
+        campusInput.required = !ehSomenteMotorista;
+    }
+
     tipoUsuarioSelect.addEventListener('change', atualizarCampoCnh);
+    tipoUsuarioSelect.addEventListener('change', atualizarCursoECampus);
+
     atualizarCampoCnh();
+    atualizarCursoECampus();
 </script>
 
 {% endblock %}
